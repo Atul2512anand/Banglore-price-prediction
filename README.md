@@ -1,4 +1,4 @@
-# 🏠 Bengaluru House Price Prediction – Linear Regression (Task 3)
+# 🏠 Bengaluru House Price Prediction – Linear Regression 
 
 This project implements **Simple and Multiple Linear Regression** using a real-world **Indian dataset** — housing data from **Bengaluru, India**. It explores relationships between house features (like size, number of bathrooms, BHK, area type) and price using visualizations and predictive modeling.
 
