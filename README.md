@@ -1,136 +1,112 @@
-# 🏠 Bengaluru House Price Prediction – Linear Regression 
+# Bengaluru House Price Prediction
 
-This project implements **Simple and Multiple Linear Regression** using a real-world **Indian dataset** — housing data from **Bengaluru, India**. It explores relationships between house features (like size, number of bathrooms, BHK, area type) and price using visualizations and predictive modeling.
+![Python](https://img.shields.io/badge/Python-3-3776AB?logo=python&logoColor=white)
+![Jupyter](https://img.shields.io/badge/Notebook-Jupyter-F37626?logo=jupyter&logoColor=white)
+![scikit-learn](https://img.shields.io/badge/ML-scikit--learn-F7931E?logo=scikitlearn&logoColor=white)
+![pandas](https://img.shields.io/badge/Data-pandas-150458?logo=pandas&logoColor=white)
 
----
+A multiple linear regression project that predicts residential property prices in Bengaluru from area, room count, bathrooms, balconies, and area type.
 
-## 🎯 Objective
+## Overview
 
-To build a **Linear Regression model** that predicts **house prices (in Lakhs INR)** based on features such as:
+The notebook uses a real Kaggle housing dataset for Bengaluru and walks through cleaning, feature engineering, visualisation, model training, and evaluation. It is an introductory regression exercise: the goal is to understand the workflow and the limits of a simple linear model on noisy property data, not to produce a valuation product.
 
-- Total square footage
-- Number of bedrooms (BHK)
-- Bathrooms
-- Balcony
-- Area type (Built-up, Super Built-up, etc.)
+## Dataset
 
----
+| Item | Value |
+|---|---|
+| Source | [Kaggle — Bengaluru House Price Data](https://www.kaggle.com/datasets/amitabhajoy/bengaluru-house-price-data) |
+| File | `Bengaluru_House_Data.csv` |
+| Rows | 13,320 |
+| Columns | 9 |
+| Target | `price` (in lakhs of INR) |
+| Raw features | `area_type`, `availability`, `location`, `size`, `society`, `total_sqft`, `bath`, `balcony` |
 
-## 📁 Dataset
+## Method
 
-- **Source**: [Kaggle – Bengaluru House Price Data](https://www.kaggle.com/datasets/amitabhajoy/bengaluru-house-price-data)
-- **File**: `Bengaluru_House_Data.csv`
-- **Target**: `price` (in Lakhs)
+The notebook has seven cells:
 
----
+1. **Load and inspect** the CSV in Colab; preview the first rows.
+2. **Clean**
+   - Drop `society` and `availability` (sparse/low-value for this exercise).
+   - Fill missing `bath` with the median and `balcony` with `0`.
+   - Drop remaining rows with nulls.
+3. **Feature engineering**
+   - Extract the numeric BHK value from `size` (for example, `"2 BHK"` → `2`).
+   - Convert `total_sqft` ranges such as `"1200-1500"` to their mean; convert non-numeric values to `NaN` and drop them.
+4. **Visualise**
+   - price distribution
+   - price-per-square-foot distribution
+   - price variation by BHK
+5. **Encode** `area_type` with one-hot encoding (`drop_first=True`).
+6. **Model** with `LinearRegression` on an 80/20 train/test split (`random_state=1`).
+7. **Evaluate** with R², MAE, and MSE, then plot actual vs predicted prices.
 
-## 🧰 Tools & Libraries
+### Feature Set
 
-- `Pandas`, `NumPy` – data loading & cleaning
-- `Matplotlib`, `Seaborn`, `Plotly` – visualizations
-- `Scikit-learn` – regression model, evaluation
+```text
+total_sqft, bath, balcony, bhk, area_type dummies
+```
 
----
+## Results
 
-## 🔧 Steps Performed
-
-### 📌 1. Data Cleaning
-- Removed missing values and unimportant columns (`society`, `availability`)
-- Handled inconsistent formats in `total_sqft` (converted ranges to mean)
-- Extracted `BHK` from the `size` column
-
-### 📊 2. Data Visualization
-
-- **Price Distribution**
-
-  ![Price Histogram](screenshots/price_distribution.png)
-
-- **Boxplot: Price vs BHK**
-
-  ![BHK Boxplot](screenshots/price_vs_bhk.png)
-
-- **Scatter Plot: Actual vs Predicted Price**
-
-  ![Actual vs Predicted](screenshots/prediction_scatter.png)
-
-### 🧠 3. Feature Engineering
-
-- Created `price_per_sqft` as a derived feature
-- One-hot encoded `area_type`
-
-### 📈 4. Linear Regression
-
-- Split data into training and test sets (80/20)
-- Trained a `LinearRegression()` model using `scikit-learn`
-- Evaluated using:
-  - MAE (Mean Absolute Error)
-  - MSE (Mean Squared Error)
-  - R² Score (Goodness of Fit)
-
----
-
-## 📊 Model Evaluation
-
-|
 | Metric | Value |
-|--------|-------|
-| **R² Score** | ~0.65 |
-| **MAE** | ~12 Lakhs |
-| **MSE** | Moderate |
-| **Target** | Continuous numeric (price in Lakhs) |
+|---|---:|
+| Test R² | **0.47** |
+| MAE | **45.06 lakhs** |
+| MSE | **12,035.51** |
 
----
+An R² of 0.47 means the linear model explains roughly 47% of the variance in the held-out prices. The large MAE reflects strong outliers, location effects that are not represented in the feature set, and the simplicity of the model.
 
-## 🔍 Key Inferences
+## Getting Started
 
-- More **square footage** generally leads to higher price.
-- **BHK** and **bathrooms** contribute positively, but not always linearly.
-- **Area type** influences pricing (built-up and super built-up areas cost more).
-- Strong multicollinearity between features like `total_sqft`, `BHK`, and `price`.
+### Google Colab
 
----
+1. Open `banglore_house_price_.ipynb` in Colab.
+2. Run the first cell and upload `Bengaluru_House_Data.csv`.
+3. Run the remaining cells to reproduce the charts and metrics.
 
-## 💡 Real-World Relevance
+### Local Jupyter
 
-This model can help:
-- Real estate businesses price homes
-- Buyers assess price fairness
-- Developers identify key pricing drivers
+```bash
+python -m venv .venv
+# Windows
+.venv\Scripts\activate
+# Linux/macOS
+source .venv/bin/activate
 
----
+pip install pandas numpy matplotlib seaborn plotly scikit-learn jupyter
+jupyter notebook banglore_house_price_.ipynb
+```
 
-## 📂 Project Structure
-Task-3-LinearRegression/
-├── Bengaluru_House_Data.csv
-├── Linear_Regression_Housing.ipynb
-├── README.md
-└── screenshots/
-├── price_distribution.png
-├── price_vs_bhk.png
-├── prediction_scatter.png
+Skip the `google.colab.files.upload()` cell and ensure the CSV filename in `pd.read_csv()` matches the local file.
 
-yaml
-Copy
-Edit
+## Project Structure
 
----
+```text
+Banglore-price-prediction/
+├── banglore_house_price_.ipynb     # 7-cell notebook
+├── Bengaluru_House_Data.csv        # Raw dataset (13,320 × 9)
+├── screenshots/                    # Exported notebook figures
+└── README.md
+```
 
-## 🚀 How to Run
+## Notes and Limitations
 
-1. Upload `Bengaluru_House_Data.csv` into Google Colab.
-2. Run all cells in `Linear_Regression_Housing.ipynb`.
-3. View the predictions, graphs, and evaluation metrics.
+- **Location is not used.** `location` is high-cardinality and was not encoded; this is a major source of unexplained price variation.
+- **Outliers remain.** No price-per-square-foot outlier filtering or luxury-property handling is applied.
+- **`price_per_sqft` is not correct as written.** The notebook computes `df["price_per_sqft"] = df["price"] * 100000`, which omits division by `total_sqft`. The column is used only for a distribution plot and is not part of the model.
+- **Random train/test split:** appropriate for a first look, but spatial or grouped splits would better test generalisation across locations.
+- **Linear assumptions:** the model cannot capture non-linear effects or interactions between area, BHK, and location.
+- **No cross-validation or hyperparameter tuning.**
+- The metrics are specific to this split (`random_state=1`) and should not be read as production accuracy.
 
----
+## Data Credit
 
-## 📌 Status
+Dataset published on Kaggle by **Amitabh Ajoy**. Refer to the Kaggle page for licensing and usage terms.
 
-> ✅ Task 3 Completed: Linear Regression  
-> 🔜 Task 4 (Optional): Polynomial Regression or ML Classification
+## Author
 
----
-
-## 👨‍💻 Author
-
-Made by **Atul Anand**  
+**Atul Anand**  
 B.Tech–M.Tech (Cyber Security), National Forensic Sciences University  
+GitHub: [@Atul2512anand](https://github.com/Atul2512anand)
